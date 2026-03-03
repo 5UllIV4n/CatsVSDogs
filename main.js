@@ -16,70 +16,24 @@ for (let letter of text) {
 
 function betterRead() {
     const oldElement = document.querySelector('.box-text');
-
     if (oldElement) {
         oldElement.classList.add('fade-out');
-
         oldElement.addEventListener('transitionend', () => {
             const newElement = document.createElement("p");
             newElement.classList.add("comic-neue-regular", "box-text");
             newElement.id = "intoll";
-            newElement.textContent = "Hello! and wellcome to the website where you can see a list of students from LA Job Corps who like cats and dogs!";
-
+            newElement.textContent = "Hello! and welcome to the website where you can see a list of students from LA Job Corps who like cats and dogs!";
             newElement.style.opacity = 0;
             oldElement.replaceWith(newElement);
-
             newElement.style.transition = "opacity 0.5s ease";
             newElement.style.opacity = 1;
         }, { once: true });
     }
 }
 
-
-
-// Pre-loaded students
-// resource credit: https://www.sliderrevolution.com/resources/css-tables/
-let sampleData = [
-    { name: "Poop", preference: "🐱🐶 Both", flagged: true },
-    { name: "Hellen Chan", preference: "🐶 Dogs", },
-    { name: "Mr. Wily", preference: "🐶 Dogs", },
-    { name: "Brandun Tehnson", preference: "🐶 Dogs", },
-    { name: "Brandon Mcmulien", preference: "🐱 Cats", },
-    { name: "Jose Valle", preference: "🐶 Dogs", },
-    { name: "Alex Cathunau", preference: "🐶 Dogs", },
-    { name: "keylah benford", preference: "🐶 Dogs", },
-    { name: "Cudela C", preference: "🐶 Dogs", },
-    { name: "Julie Madison", preference: "🐶 Dogs", },
-    { name: "Janay Landry", preference: "🐶 Dogs", },
-    { name: "Kayla W.", preference: "🐶 Dogs", },
-    { name: "Dock G.", preference: "🐶 Dogs", },
-    { name: "Mekigh F", preference: "🐶 Dogs", },
-    { name: "Ms. Player", preference: "🐶 Dogs", },
-    { name: "Melendez", preference: "🐶 Dogs", },
-    { name: "Ms. Sandaval", preference: "🐶 Dogs", },
-    { name: "Dezy Wezy", preference: "🐶 Dogs", },
-    { name: "Taylor Candelarla", preference: "🐶 Dogs", },
-    { name: "David Gonzalez", preference: "🐶 Dogs", },
-    { name: "Johnathon G", preference: "🐱 Cats", },
-    { name: "Mr.S", preference: "🐱 Cats", },
-    { name: "Kevin V.", preference: "🐱 Cats", },
-    { name: "Big R", preference: "🐱 Cats", },
-    { name: "randonname", preference: "🐱 Cats", },
-    { name: "Matthew Cordero", preference: "🐱 Cats", },
-    { name: "DB", preference: "🐱 Cats", },
-    { name: "Alex Rizo", preference: "🐱 Cats", },
-    { name: "Richard Corona", preference: "🐱 Cats", },
-    { name: "Amanuael - TerFaze", preference: "🐶 Dogs", },
-    { name: "EP", preference: "🐱 Cats", },
-    { name: "Ceige", preference: "🐶 Dogs", },
-    { name: "Rosie Adero", preference: "🐶 Dogs", },
-    { name: "Benjamin H.", preference: "🐱 Cats", },
-];
-
-/* ──────────────────────────────────────────
-   CLOUDFLARE WORKER API
-─────────────────────────────────────────── */
 const WORKER_URL = "https://jcla-students-api.formundah.workers.dev";
+
+let sampleData = [];
 
 async function loadStudents() {
     try {
@@ -92,12 +46,12 @@ async function loadStudents() {
     updateTable();
 }
 
-async function saveStudent(name, preference) {
+async function saveStudent(name, preference, flagged) {
     try {
         const res = await fetch(`${WORKER_URL}/students`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, preference }),
+            body: JSON.stringify({ name, preference, flagged }),
         });
         const result = await res.json();
         return result.success;
@@ -106,7 +60,6 @@ async function saveStudent(name, preference) {
         return false;
     }
 }
-
 
 let currentPage = 1;
 let pageSize = 10;
@@ -188,6 +141,18 @@ function updateTable() {
 
     tbody.innerHTML = '';
 
+    if (paginatedData.length === 0) {
+        const emptyRow = document.createElement('tr');
+        const emptyCell = document.createElement('td');
+        emptyCell.colSpan = 2;
+        emptyCell.textContent = 'No students found!';
+        emptyCell.style.textAlign = 'center';
+        emptyCell.style.padding = '2rem';
+        emptyRow.appendChild(emptyCell);
+        tbody.appendChild(emptyRow);
+        return;
+    }
+
     paginatedData.forEach(item => {
         const row = document.createElement('tr');
         if (item.flagged) row.classList.add('flagged-row');
@@ -197,9 +162,7 @@ function updateTable() {
         nameCell.textContent = item.name.length > MAX_DISPLAY
             ? item.name.slice(0, MAX_DISPLAY) + '...'
             : item.name;
-        if (item.name.length > MAX_DISPLAY) {
-            nameCell.title = item.name;
-        }
+        if (item.name.length > MAX_DISPLAY) nameCell.title = item.name;
         nameCell.setAttribute('tabindex', '0');
 
         const prefCell = document.createElement('td');
@@ -267,12 +230,10 @@ Array.from(sortButtons).forEach((button, index) => {
 table.addEventListener('keydown', (e) => {
     const currentCell = e.target;
     if (!currentCell || !currentCell.parentElement) return;
-
     const currentRow = currentCell.parentElement;
     const rows = Array.from(table.rows);
     const currentRowIndex = rows.indexOf(currentRow);
     const currentCellIndex = Array.from(currentRow.cells).indexOf(currentCell);
-
     switch (e.key) {
         case 'ArrowRight': currentRow.cells[currentCellIndex + 1]?.focus(); break;
         case 'ArrowLeft': currentRow.cells[currentCellIndex - 1]?.focus(); break;
@@ -283,14 +244,15 @@ table.addEventListener('keydown', (e) => {
 
 let timeout;
 const images = document.getElementById("popupImg");
-
-document.getElementById("fName").addEventListener("input", function typing() {
-    images.style.opacity = 1;
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-        images.style.opacity = 0;
-    }, 200);
-});
+if (images) {
+    document.getElementById("fName").addEventListener("input", function typing() {
+        images.style.opacity = 1;
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            images.style.opacity = 0;
+        }, 200);
+    });
+}
 
 function announceToScreenReader(message) {
     const announcement = document.createElement('div');
@@ -309,7 +271,6 @@ function logAction(message) {
     toast.id = 'log-toast';
     toast.className = 'log-toast';
     toast.textContent = message;
-
     document.body.appendChild(toast);
 
     requestAnimationFrame(() => {
@@ -360,7 +321,7 @@ addForm.addEventListener('submit', function (event) {
     msg1.textContent = 'Adding ';
     const strong1 = document.createElement('strong');
     strong1.textContent = firstName;
-    msg1.append(strong1, ` (${petPref}) are you sure?`);
+    msg1.append(strong1, ` (${petPref}) — are you sure?`);
 
     const timerSpan = document.createElement('span');
     timerSpan.id = 'cd-timer';
@@ -388,22 +349,25 @@ addForm.addEventListener('submit', function (event) {
     cancelBtn.textContent = '❌ Cancel';
 
     countdownDiv.append(msg1, msg2, saveBtn, cancelBtn);
-
     addForm.appendChild(countdownDiv);
 
-    const timerDisplay = timerSpan;
     const interval = setInterval(() => {
         timeLeft--;
-        timerDisplay.textContent = timeLeft;
-        if (timeLeft <= 3) timerDisplay.style.color = 'red';
+        timerSpan.textContent = timeLeft;
+        if (timeLeft <= 3) timerSpan.style.color = 'red';
         if (timeLeft <= 0) {
             clearInterval(interval);
             cancelAdd();
         }
     }, 1000);
 
-    countdownDiv.querySelector('#cd-save').addEventListener('click', () => {  
+    // ✅ Save — sends to Worker + KV
+    saveBtn.addEventListener('click', async () => {
         clearInterval(interval);
+        saveBtn.textContent = 'Saving...';
+        saveBtn.disabled = true;
+        cancelBtn.disabled = true;
+
         let flagged;
         try {
             flagged = isFlagged(firstName);
@@ -415,20 +379,25 @@ addForm.addEventListener('submit', function (event) {
             }
             flagged = true;
         }
-        sampleData.push({ name: firstName, preference: petPref, flagged });
-        const filtered = filterData(sampleData);
-        currentPage = Math.ceil(filtered.length / pageSize) || 1;
-        updateTable();
-        cleanup();
-        addForm.reset();
-        if (flagged) {
-            logAction("⚠️ That name was flagged and hidden from the main list.");
+
+        const success = await saveStudent(firstName, petPref, flagged);
+
+        if (success) {
+            await loadStudents(); // reload from KV so table is in sync
+            addForm.reset();
+            if (flagged) {
+                logAction("⚠️ That name was flagged and hidden from the main list.");
+            } else {
+                logAction(`✅ ${firstName} has been added!`);
+            }
         } else {
-            logAction(`✅ ${firstName} has been added!`);
+            logAction("❌ Something went wrong saving your name. Try again!");
         }
+
+        cleanup();
     });
 
-    countdownDiv.querySelector('#cd-cancel').addEventListener('click', () => {
+    cancelBtn.addEventListener('click', () => {
         clearInterval(interval);
         cancelAdd();
     });
@@ -443,8 +412,6 @@ addForm.addEventListener('submit', function (event) {
         submitBtn.disabled = false;
     }
 });
-
-updateTable();
 
 /* ── Load students from KV on page load ── */
 loadStudents();
