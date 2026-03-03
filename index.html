@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="a webstie where you can vote on cats or dogs">
+    <meta name="keywords"
+        content="LA, la,  Los Angeles,  Los Angeles jobcorps, jobcorps, JOB CORPS, JC, JCLA, cats vs dogs, cats, dogs, school, work, coding, la job corps, Training Programs">
+    <title>Cats VS Dogs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="target">
+        <div class="word-wrapper">
+            <span class="solid">CATS VS DOGS</span>
+            <span class="shadow">CATS VS DOGS</span>
+        </div>
+    </div>
+
+    <div class="btn-holder">
+        <button class="btn comic-neue-regular" type="button" onclick="betterRead()">Eazy Read</button>
+    </div>
+
+        <h2 class="Hint comic-neue-regular">(press the button to read the text better)</h2>
+
+    <p id="intoll" class="comic-neue-regular box-text">Hello! and wellcome to the webstie where you can see a list of students from LA job corps who likes cats and dogs!</p>
+
+    <div class="line"></div>
+
+    <!-- Student Directory Table -->
+    <div class="table-container" role="region" aria-label="Student data" tabindex="0">
+        <table aria-label="Students">
+            <caption>Students</caption>
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <button class="sort-button" aria-label="Sort by name">
+                            A - Z
+                            <svg class="sort-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill="currentColor" d="M7 10l5 5 5-5z" />
+                            </svg>
+                        </button>
+                        <input type="text" class="column-filter" placeholder="Filter by name"
+                            aria-label="Filter by name">
+                    </th>
+                    <th scope="col">
+                        Preference
+                        <select class="column-filter pref-filter" aria-label="Filter by preference">
+                            <option value="">All</option>
+                            <option value="🐱 Cats">🐱 Cats</option>
+                            <option value="🐶 Dogs">🐶 Dogs</option>
+                            <option value="🐱🐶 Both">🐱🐶 Both</option>
+                        </select>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+        <div class="pagination" role="navigation" aria-label="Pagination">
+            <div class="pagination-info">
+                Showing <span class="current-range">1-10</span> of <span class="total-items">0</span> items
+            </div>
+            <div class="pagination-controls">
+                <button class="prev-page" aria-label="Previous page" disabled>Previous</button>
+                <span class="current-page" aria-label="Current page">Page 1</span>
+                <button class="next-page" aria-label="Next page">Next</button>
+                <select id="ch" class="page-size-select" aria-label="Items per page">
+                    <option value="5">5 per page</option>
+                    <option value="10" selected>10 per page</option>
+                    <option value="25">25 per page</option>
+                    <option value="50">50 per page</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="line"></div>
+
+    <!-- Add Yourself Form -->
+    <section class="add-section">
+        <h2 class="comic-neue-regular section-title">You Need To Add Yourself NOW!</h2>
+        <p class="comic-neue-regular">Fill out the form below to add your name to the list.</p>
+
+        <form id="addForm" class="add-form" novalidate>
+            <div class="form-group">
+                <label for="fName" class="comic-neue-regular">Your Name</label>
+                <input type="text" id="fName" name="fName" class="form-input comic-neue-regular"
+                    placeholder="Your name (24 character limit)" required>
+                <img id="popupImg" src="assets/imgs/NOW!.png" alt="popup image 1">
+            </div>
+            <div class="form-group">
+                <label class="comic-neue-regular">I prefer...</label>
+                <div class="pet-choice">
+                    <label class="pet-label comic-neue-regular">
+                        <input type="radio" name="petPref" value="🐱 Cats" required> 🐱 Cats
+                    </label>
+                    <label class="pet-label comic-neue-regular">
+                        <input type="radio" name="petPref" value="🐶 Dogs"> 🐶 Dogs
+                    </label>
+                    <label class="pet-label comic-neue-regular">
+                        <input type="radio" name="petPref" value="🐱🐶 Both"> 🐱🐶 Both
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn comic-neue-regular">Add Me!</button>
+        </form>
+    </section>
+
+    <div class="line" style="margin-bottom: 2rem;"></div>
+
+    <div class="footer-section">
+        <h2 class="Hint comic-neue-regular">I was informed that everyone agreed to have their name on the board. If you
+            did not agree or were
+            misinformed, please contact me using the link below to have your name removed.</h2>
+        <div class="container comic-neue-regular">
+            <a href="mailto:formundah@gmail.com" target="_blank" class="Link">My Email</a>
+        </div>
+    </div>
+
+    <div class="tag">
+        <h4>
+            Made by <a href="https://github.com/5UllIV4n" target="_blank" class="clickMe">|20M30</a>
+        </h4>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
