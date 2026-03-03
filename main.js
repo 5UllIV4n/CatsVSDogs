@@ -76,6 +76,38 @@ let sampleData = [
     { name: "Benjamin H.", preference: "🐱 Cats", },
 ];
 
+/* ──────────────────────────────────────────
+   CLOUDFLARE WORKER API
+─────────────────────────────────────────── */
+const WORKER_URL = "https://jcla-students-api.formundah.workers.dev";
+
+async function loadStudents() {
+    try {
+        const res = await fetch(`${WORKER_URL}/students`);
+        sampleData = await res.json();
+    } catch (err) {
+        console.error("Failed to load students:", err);
+        sampleData = [];
+    }
+    updateTable();
+}
+
+async function saveStudent(name, preference) {
+    try {
+        const res = await fetch(`${WORKER_URL}/students`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, preference }),
+        });
+        const result = await res.json();
+        return result.success;
+    } catch (err) {
+        console.error("Failed to save student:", err);
+        return false;
+    }
+}
+
+
 let currentPage = 1;
 let pageSize = 10;
 let sortColumn = null;
@@ -413,3 +445,6 @@ addForm.addEventListener('submit', function (event) {
 });
 
 updateTable();
+
+/* ── Load students from KV on page load ── */
+loadStudents();
