@@ -58,7 +58,7 @@ let sampleData = [
     { name: "Melendez", preference: "🐶 Dogs", },
     { name: "Ms. Sandaval", preference: "🐶 Dogs", },
     { name: "Dezy Wezy", preference: "🐶 Dogs", },
-    { name: "Taylor Canauarla", preference: "🐶 Dogs", },
+    { name: "Taylor Candelarla", preference: "🐶 Dogs", },
     { name: "David Gonzalez", preference: "🐶 Dogs", },
     { name: "Johnathon G", preference: "🐱 Cats", },
     { name: "Mr.S", preference: "🐱 Cats", },
