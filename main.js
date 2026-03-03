@@ -72,6 +72,8 @@ let sampleData = [
     { name: "Amanuael - TerFaze", preference: "🐶 Dogs", },
     { name: "EP", preference: "🐱 Cats", },
     { name: "Ceige", preference: "🐶 Dogs", },
+    { name: "Rosie Adero", preference: "🐶 Dogs", },
+    { name: "Benjamin H.", preference: "🐱 Cats", },
 ];
 
 let currentPage = 1;
